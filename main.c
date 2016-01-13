@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
@@ -15,9 +16,10 @@ int x = 0, old_x = 0, y = 0, old_y = 0, snake_size = 50, actual_size = 1;
 
 enum world_content
 {
-    background,
-    wall,
-    snake
+    background = 0,
+    wall = 1,
+    snake = 2,
+    apple = 3,
 };
 
 void draw_frame(SDL_Surface *s, int x, int y, enum world_content content)
@@ -26,11 +28,13 @@ void draw_frame(SDL_Surface *s, int x, int y, enum world_content content)
     Uint8 red, blue, green;
     switch(content)
     {
-	case background : red = 0, green = 255, blue = 0;
+	case background : red = 0, green = 128, blue = 128;
 		break;
 	case wall : red = 255, green = 0, blue = 0;
 	        break;
 	case snake : red = 0, green = 0, blue = 255;
+		break;
+	case apple : red = 0, green = 255, blue = 255;
 		break;
     }
     if(SDL_FillRect(s, &pos, SDL_MapRGB(s->format, red, blue, green)) == -1)
@@ -39,24 +43,33 @@ void draw_frame(SDL_Surface *s, int x, int y, enum world_content content)
     }
 }
 
-void draw_world_frame(SDL_Surface *s, int x, int y, char content)
+void place_apple(SDL_Surface *s)
 {
-    if(content == 0)
-	draw_frame(s, x, y, background);
-    else if(content == 1)
-        draw_frame(s, x, y, wall);
-    else if(content == 2)
-        draw_frame(s, x, y, snake);
+    int x_apple;
+    int y_apple;
+    do
+    {
+        x_apple = rand() % SCREEN_X_SIZE;
+        y_apple = rand() % SCREEN_Y_SIZE;
+    }
+    while((enum world_content)world[x_apple][y_apple][2] != background);
+    world[x_apple][y_apple][2] = (char)apple;
+    printf("apple place %d %d\n", x_apple, y_apple);
+    draw_frame(s, x_apple, y_apple, apple);
 }
 
+/**
+* Use first to init the world and place the apple
+*/
 void draw_world(SDL_Surface *s, char world[SCREEN_X_SIZE][SCREEN_Y_SIZE][4])
 {
     int x, y;
     for(x = 0; x < SCREEN_X_SIZE; x++)
     {
 	for(y = 0; y < SCREEN_Y_SIZE; y++)
-	    draw_world_frame(s, x, y, 0);
+	    draw_frame(s, x, y, background);
     }
+    place_apple(s); 
 }
 
 int move_snake(SDL_Surface *s, int xspeed, int yspeed)
@@ -101,7 +114,7 @@ int move_snake(SDL_Surface *s, int xspeed, int yspeed)
 		new_old_y = SCREEN_Y_SIZE - 1;
 	}
 	printf("move ass : [%d, %d] => [%d, %d]\n", old_x, old_y, new_old_x, new_old_y);
-        draw_world_frame(s, old_x, old_y, 0);
+        draw_frame(s, old_x, old_y, background);
         world[old_x][old_y][0] = 0;
         world[old_x][old_y][1] = 0;
         world[old_x][old_y][2] = 0;
@@ -127,14 +140,25 @@ int move_snake(SDL_Surface *s, int xspeed, int yspeed)
     if(y < 0)
 	y = SCREEN_Y_SIZE - 1;
 
-    if(world[x][y][2] != 0)
-	return -1;
-    draw_world_frame(s, x, y, 2);
+    switch((enum world_content)world[x][y][2])
+    {
+        case wall :
+        case snake :
+	    return -1;
+        case apple :
+            snake_size += 10;
+            place_apple(s);
+            //FALLTROUGH
+        case background :
+            draw_frame(s, x, y, snake);
+            return 0;
+    }
     return 0;
 }
 
 int main( int argc, char *argv[ ] )
 {
+    srand(time(NULL));//Init randome seed.
     memset(world, 0, sizeof(world));
     SDL_Window *window;
     SDL_Surface *screen;
