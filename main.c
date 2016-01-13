@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #define SPEED_RATE 1
-#define TIMER 4
+#define TIMER 40
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 #define FRAME_SIZE	10
@@ -133,6 +133,7 @@ int move_snake(SDL_Surface *s, int xspeed, int yspeed)
 int main( int argc, char *argv[ ] )
 {
     memset(world, 0, sizeof(world));
+    SDL_Window *window;
     SDL_Surface *screen;
     if( SDL_Init( SDL_INIT_VIDEO ) == -1 )
     {
@@ -141,7 +142,8 @@ int main( int argc, char *argv[ ] )
     }
 
     atexit( SDL_Quit ); 
-    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_HWSURFACE );
+    window = SDL_CreateWindow("Ma fenêtre de jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0 );
+    screen = SDL_GetWindowSurface(window);
 
     if( screen == NULL )
     {
@@ -211,7 +213,7 @@ int main( int argc, char *argv[ ] )
         }
        
         //Update the display
-        SDL_Flip(screen);
+        SDL_UpdateWindowSurface(window);
         
     }
 
