@@ -79,26 +79,26 @@ int move_snake(SDL_Surface *s, int xspeed, int yspeed)
 	if(world[old_x][old_y][0] > 0)
 	{
 	    new_old_x = old_x + 1;
-	    if(new_old_x > SCREEN_X_SIZE)
+	    if(new_old_x >= SCREEN_X_SIZE)
 		new_old_x = 0;
 	}
 	else if(world[old_x][old_y][0] < 0)
 	{
 	    new_old_x = old_x - 1;
 	    if(new_old_x < 0)
-		new_old_x = SCREEN_X_SIZE;
+		new_old_x = SCREEN_X_SIZE - 1;
 	}
 	if(world[old_x][old_y][1] > 0)
 	{
 	    new_old_y = old_y + 1;
-	    if(new_old_y > SCREEN_Y_SIZE)
+	    if(new_old_y >= SCREEN_Y_SIZE)
 		new_old_y = 0;
 	}
 	else if(world[old_x][old_y][1] < 0)
 	{
 	    new_old_y = old_y - 1;
 	    if(new_old_y < 0)
-		new_old_y = SCREEN_Y_SIZE;
+		new_old_y = SCREEN_Y_SIZE - 1;
 	}
 	printf("move ass : [%d, %d] => [%d, %d]\n", old_x, old_y, new_old_x, new_old_y);
         draw_world_frame(s, old_x, old_y, 0);
@@ -109,7 +109,10 @@ int move_snake(SDL_Surface *s, int xspeed, int yspeed)
         old_y = new_old_y;
     }
     else
+    {
 	actual_size++;
+	printf("draw ass : [%d, %d]\n", old_x, old_y);
+    }
     world[x][y][0] = xspeed;
     world[x][y][1] = yspeed;
     world[x][y][2] = 2;
@@ -117,12 +120,12 @@ int move_snake(SDL_Surface *s, int xspeed, int yspeed)
     if(x >= SCREEN_X_SIZE)
 	x = 0;
     if(x < 0)
-	x = SCREEN_X_SIZE;
+	x = SCREEN_X_SIZE - 1;
     y += yspeed;
     if(y >= SCREEN_Y_SIZE)
 	y = 0;
     if(y < 0)
-	y = SCREEN_Y_SIZE;
+	y = SCREEN_Y_SIZE - 1;
 
     if(world[x][y][2] != 0)
 	return -1;
@@ -142,7 +145,7 @@ int main( int argc, char *argv[ ] )
     }
 
     atexit( SDL_Quit ); 
-    window = SDL_CreateWindow("Ma fenêtre de jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0 );
+    window = SDL_CreateWindow("Ma fenêtre de jeu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0 );
     screen = SDL_GetWindowSurface(window);
 
     if( screen == NULL )
