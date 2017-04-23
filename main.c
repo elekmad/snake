@@ -74,7 +74,7 @@ void draw_world(SDL_Surface *s, char world[SCREEN_X_SIZE][SCREEN_Y_SIZE][4])
 
 int move_snake(SDL_Surface *s, int xspeed, int yspeed)
 {
-    static timer = 0;
+    static int timer = 0;
     if(timer < TIMER)
     {
 	timer++;
