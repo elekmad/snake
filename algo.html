@@ -17,76 +17,52 @@
 <p style="margin-bottom: 0cm; line-height: 100%">Voici le
 fonctionnement de l'algorithme permettant de facilement  faire
 avancer le ver, sans pour autant avoir trop de calculs à effectué,
-dépendant de la longueur du ver&nbsp;:</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
+dépendant de la longueur du ver&nbsp;:
+<br>
 <ol>
-	<li><p style="margin-bottom: 0cm; line-height: 100%">Nous
+	<li>Nous
 	enregistrons dans un tableau représentant le niveau parcouru la
 	direction que prenait le ver à ce moment du jeu tel que&nbsp;: Ici,
 	le T représentant la tête, et donc la position actuelle, bien sûr,
 	le bout opposé représente la queue et donc la partir que nous
-	devons effacer.</p>
-	<p style="margin-bottom: 0cm; line-height: 100%"></p>
+	devons effacer.
 </ol>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><img src="data:image/png;base64,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" name="Objet1" align="left" width="491" height="378"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br>
-</p>
+<br>
+<img src="data:image/png;base64,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" name="Objet1" align="left" width="491" height="378"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <ol start="2">
-	<li><p style="margin-bottom: 0cm; line-height: 100%">En conservant
+	<li>En conservant
 	alors les coordonnées, non seulement de la tête, pour y
 	enregistrer la direction une fois fixée, mais aussi de la queue,
 	nous avons tout les éléments pour avoir la prochaine position du
-	ver&nbsp;:</p>
-	<li><p style="margin-bottom: 0cm; line-height: 100%">Nous savons,
+	ver&nbsp;:
+	<li>Nous savons,
 	ici, que a ce moment le ver allait vers la droite (non seulement
 	parce que visuellement nous le voyons, mais surtout car le tableau
 	l'indique), donc nous savons alors que dès que nous aurons effacé
 	ce bout de queue, le prochain bout sera la case située à droite de
-	la case courante.</p>
+	la case courante.
 </ol>
+</p>
 </body>
 </html>
