@@ -11,7 +11,7 @@ add_executable(Snake main.c)
 find_package(SDL2 REQUIRED)
 if (SDL2_FOUND)
   include_directories(${SDL2_INCLUDE_DIR})
-  target_link_libraries (Snake ${SDL2_LIBRARY})
+  target_link_libraries (Snake ${SDL2_LIBRARIES})
 endif (SDL2_FOUND)
 
 if( WITH_COREDEBUG )
